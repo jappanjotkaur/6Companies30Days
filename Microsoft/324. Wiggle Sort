@@ -1,0 +1,27 @@
+//TC:O(N), SC: O(1)
+class Solution {
+public:
+    void wiggleSort(vector<int>& nums) {
+        int maxx = *max_element(nums.begin(),nums.end()); //This line finds the maximum element in the nums array using the max_element function. The *max_element() function returns the value of the maximum element in the array, and we store this in maxx.
+        vector<int> sortArray(maxx+1,0); //new vector sortArray of size maxx+1 (because maxx is the highest number in the array, so we need an index from 0 to maxx). The vector is initialized with 0s to act as a frequency array, where sortArray[i] will store the count of occurrences of the number i in nums.
+
+        for( int i=0; i<nums.size(); i++ )
+            sortArray[nums[i]]++; //For ex, if nums[i] == 3, then sortArray[3]++ will increase the count for the number 3 in the array.
+
+        int j = maxx;
+        for( int i=1; i<nums.size(); i+=2 ) //This starts a loop that goes through the indices of nums, but only processes the odd-indexed positions (starting from index 1). This is where we place the largest numbers from sortArray into the odd positions of nums.
+        {
+            while( sortArray[j] == 0 )//move to the next smaller number in the frequency array (j decrements) until we find a number with a non-zero count.
+                j--;
+            nums[i] = j;
+            sortArray[j]--;
+        }
+        for( int i=0; i<nums.size(); i+=2 ) //even-indexed positions (starting from index 0) 
+        {
+            while( sortArray[j] == 0 )
+                j--;
+            nums[i] = j;
+            sortArray[j]--;
+        }
+    }
+};
