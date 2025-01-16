@@ -10,8 +10,7 @@ public:
             num_pts += (rect[2] - rect[0] + 1)*(rect[3] - rect[1] + 1);
             rect_cum_count.push_back(num_pts);
         }
-    }
-    
+    }    
     vector<int> pick() {
         int pt_idx = rand() % num_pts;
         int l = 0, r = rects.size()-1;
