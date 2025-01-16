@@ -16,7 +16,6 @@ public:
                 sum -= nums[l] % 2;
                 l++;
             }
-            
             // Count the subarrays with exactly k odd numbers
             ans += (r - l + 1);
             
