@@ -1,0 +1,38 @@
+class Solution {//Floyd Warshall better to use here rather than using Dijkstra
+public:
+    void FloydWarshall(vector<vector<long long>> &adjMatrix, vector<char>& original, vector<char>& changed, vector<int> cost){
+        for(int i=0;i<original.size();i++){ //O(N)
+            int s=original[i]-'a';
+            int t=changed[i]-'a';
+            adjMatrix[s][t]=min(adjMatrix[s][t],(long long)cost[i]);
+        }
+        //Apply Floyd Warshall
+        for(int k=0;k<26;k++){ //complexity is 𝑂(26^3)=𝑂(1)
+            for(int i=0;i<26;i++){
+                for(int j=0;j<26;j++){
+                    adjMatrix[i][j]=min(adjMatrix[i][j],adjMatrix[i][k]+adjMatrix[k][j]);
+                }
+            }
+        }
+    } 
+
+    long long minimumCost(string source, string target, vector<char>& original, vector<char>& changed, vector<int>& cost) {
+        vector<vector<long long>> adjMatrix(26,vector<long long>(26,INT_MAX));
+        FloydWarshall(adjMatrix, original, changed,cost); //update adjMatrix with shortest path usingn FLoyd Warshall
+        long long ans=0;
+        for(int i=0;i<source.length();i++){//O(M)
+            if(source[i]==target[i]){
+                continue;
+            }
+            if(adjMatrix[source[i]-'a'][target[i]-'a']==INT_MAX){
+                return -1;
+            }
+            ans+=adjMatrix[source[i]-'a'][target[i]-'a'];
+        }
+        return ans;
+    } 
+};
+//TC:O(N+M)
+/*Auxiliary Space Complexity (excluding input): 𝑂(1)
+Total Space Complexity (including input storage): 𝑂(𝑁+𝑀) original, changed, and cost arrays each have at most N elements → 𝑂(𝑁)
+Source and target strings each have at most M characters → 𝑂(𝑀)*/
