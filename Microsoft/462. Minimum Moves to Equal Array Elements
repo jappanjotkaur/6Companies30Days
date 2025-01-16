@@ -1,0 +1,28 @@
+// Brute force: finding median and adding or subtracting
+// class Solution {
+// public:
+//     int minMoves2(vector<int>& nums) {
+//         int n = nums.size(), steps = 0;
+//         sort(nums.begin(), nums.end());
+//         int median = nums[n/2]; // Finding median
+//         for(int i=0; i<n; i++){
+//             steps += abs(nums[i] - median); //Adding absolute difference
+//         }
+//         return steps;
+//     }
+// };
+class Solution {
+public:
+    int minMoves2(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        int start=0;
+        int end=nums.size()-1;
+        int count=0;
+        while(start<end){
+            count+=abs(nums[end]-nums[start]);//abs not necessary here vese bcz end is greater than start element
+            start++;
+            end--;
+        }
+        return count;
+    }
+};//TC:O(nlogn) SC:O(1)
