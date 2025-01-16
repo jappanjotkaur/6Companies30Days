@@ -1,0 +1,33 @@
+class Solution { //TC:O(n) SC:O(1)
+//Sliding window
+public:
+    int oddsub(vector<int>& nums, int k) {
+        if (k < 0) return 0;
+        
+        int l = 0, r = 0, ans = 0, sum = 0;
+        int n = nums.size();
+        
+        while (r < n) {
+            // Add the current number if it is odd
+            sum += nums[r] % 2;
+            
+            // If sum exceeds k, move the left pointer to shrink the window
+            while (sum > k) {
+                sum -= nums[l] % 2;
+                l++;
+            }
+            
+            // Count the subarrays with exactly k odd numbers
+            ans += (r - l + 1);
+            
+            // Move the right pointer to expand the window
+            r++;
+        }
+        
+        return ans;
+    }
+    
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        return oddsub(nums, k) - oddsub(nums, k - 1);
+    }
+};
