@@ -1,0 +1,75 @@
+class Solution {//TC:O(n) SC:O(1)
+public:
+    int longestMountain(vector<int>& arr) {
+     
+        int ans=0;
+        int n=arr.size();
+        //1 to n-2 because n-1 elements and n-1(last element) cannot be peak point
+        for(int i=1;i<=n-2;){
+            if(arr[i]>arr[i-1] && arr[i]>arr[i+1]){
+                int count=1;
+                int j=i;
+                while(j>0 && arr[j]>arr[j-1]){
+                    j--;
+                    count++;
+                }
+                while(i<n-1 && arr[i]>arr[i+1]){
+                    i++;
+                    count++; 
+                }
+                ans=max(count,ans);
+                
+            }
+            else{
+                i++;
+            }
+        }
+        return ans>= 3 ? ans : 0;
+    }
+};
+/*Each index i is visited at most twice:
+Once when expanding left (only when arr[i] is a peak)
+Once when expanding right (only when arr[i] is a peak)
+After processing a mountain, i is moved past the entire mountain, so those elements won’t be rechecked.
+This ensures that each element is part of at most one left-expansion and one right-expansion, leading to a total of O(2N) = O(N) operations.*/
+
+/*One pass
+class Solution {
+public:
+    int longestMountain(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 0;
+        int i = 1; // Start from index 1 (as first and last elements cannot be peaks)
+
+        while (i < n - 1) {
+            // Check if arr[i] is a peak
+            if (arr[i] > arr[i - 1] && arr[i] > arr[i + 1]) {
+                int left = i, right = i;
+                int count = 1; // Start with peak
+
+                // Expand left
+                while (left > 0 && arr[left] > arr[left - 1]) {
+                    left--;
+                    count++;
+                }
+
+                // Expand right
+                while (right < n - 1 && arr[right] > arr[right + 1]) {
+                    right++;
+                    count++;
+                }
+
+                // Update the longest mountain length
+                ans = max(ans, count);
+
+                // Move `i` directly to `right` to avoid redundant checks
+                i = right;
+            } else {
+                i++;
+            }
+        }
+
+        return ans >= 3 ? ans : 0; // Ensure a valid mountain has at least 3 elements
+    }
+};
+*/
