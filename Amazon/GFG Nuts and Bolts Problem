@@ -1,0 +1,13 @@
+class Solution {
+  public:
+
+    void matchPairs(int n, char nuts[], char bolts[]) {
+        sort(nuts,nuts+n); //to sort the elements from the start of the array nuts[0] up to (but not including) nuts[n]
+        for(int i=0;i<n;i++)
+        {
+            bolts[i]=nuts[i];
+        }
+    }
+};
+//TC:𝑂(𝑛log𝑛)+𝑂(𝑛)=𝑂(𝑛log⁡𝑛)  Sorting Copying elements from nuts to bolts
+//SC:O(1)
