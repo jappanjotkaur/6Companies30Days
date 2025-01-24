@@ -1,0 +1,31 @@
+class Solution {
+public:
+    vector<int> maxSubsequence(vector<int>& nums, int k) {
+        unordered_map<int, int> M;
+        vector<int> P = nums; //copy of the input vector nums
+        sort(P.begin(), P.end());
+        int j = nums.size() - 1;
+        while (j >= 0 && k > 0) {
+
+            M[P[j]]++;
+            k--;
+            j--;
+        }
+        vector<int> ANS;
+        for (int a : nums) {//original nums array (not the sorted one)
+            if (M.find(a) != M.end() && M[a] > 0) {
+                ANS.push_back(a);
+                M[a]--;
+            }
+        }
+        return ANS;
+    }
+};
+/*TC:O(n log n).
+Sorting: O(n log n)
+Selecting top k elements: O(k) (since we're iterating through the sorted array)
+Constructing the subsequence: O(n)
+SC= O(n)
+O(n) for the copy of the array P.
+O(k) for the unordered map M.
+O(k) for the result subsequence ANS.*/
