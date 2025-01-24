@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int findPairs(vector<int>& nums, int k) {
+        unordered_map<int,int> a;
+        for(int i:nums)
+            a[i]++;
+        int ans=0;
+        for(auto x:a){//iterates through each entry in the unordered map a
+            if(k==0){//pairs where both numbers are equal
+                if(x.second>1)//for each no. x.first,checks if frequency x.second (how many times the no. appears in nums) is greater than 1
+                ans++;
+            }
+             else if(a.find(x.first+k)!=a.end())// look for pairs (num, num + k) and for each number x.first, checks if x.first + k exists in the unordered map a
+                ans++;
+        }
+        
+        return ans;
+    }
+};
+//TC & SC: O(n)
