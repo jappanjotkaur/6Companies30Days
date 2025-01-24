@@ -1,0 +1,23 @@
+//TC:O(k); k=total no. of nodes(m+n)
+//SC:O(1)
+class Solution {
+  public:
+    Node* linkdelete(Node* head, int n, int m) {
+        Node*curr=head,*t;//Initializes 2 pointers.t is used to store next nodes that need to be deleted.
+        while(curr!=NULL){
+            for(int i=1;i<m && curr!=NULL;i++){
+                curr=curr->next;//to skip m nodes.
+            }
+            if(curr==NULL) return head;
+            t=curr->next;
+            for(int i=1;i<=n && t!=NULL;i++){
+                Node *temp=t; //creates pointer temp that points to the node to be deleted 
+                t=t->next;
+                delete(temp);//Deletes the node pointed to by temp
+            }
+            curr->next=t;//Linking the remaining list
+            curr=t;
+        }
+        return head;
+    }
+};
