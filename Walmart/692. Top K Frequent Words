@@ -1,0 +1,28 @@
+class Solution {//(Time : O(nlogn), Space : O(n))
+public:
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        vector<pair<int, string>> vp;
+        unordered_map<string, int> mp;        
+        for(string &word : words) {//Count the Frequency of Words
+            mp[word]++;
+        }
+        
+        for(auto &it : mp) {
+            vp.push_back({it.second, it.first});//Push each key-value pair as {frequency, word} into the vp vector like vp = [{2, "i"},{2, "love"},{1, "coding"}]
+        }        
+        auto lambda = [](pair<int, string>& p1, pair<int, string>& p2) {//Comparator for Sorting
+            if(p1.first == p2.first)
+                return p1.second < p2.second;            
+            return p1.first > p2.first;
+        };        
+        sort(begin(vp), end(vp), lambda);        
+        int i = 0;
+        vector<string> result(k);
+        while(i < k) {// Extract the Top K Frequent Words
+            result[i] = vp[i].second;
+            i++;
+        }        
+        return result;
+    }
+};
+//Better approach: (Using Heap - Time : O(nlogk), Space : O(n))
