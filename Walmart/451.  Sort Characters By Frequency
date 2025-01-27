@@ -1,0 +1,23 @@
+class Solution {// TC:O(n)   SC:O(n)
+public:
+    typedef pair<char, int> P;//so that dubaara dubaarapoora likhna na pdhe
+    
+    string frequencySort(string s) {
+        vector<P> vec(123);//az AZ        
+        for(char &ch : s) {
+            int freq = vec[ch].second;
+            vec[ch] = {ch, freq+1};
+        }        
+        auto comp = [&](P &p1, P &p2) {//Comparator
+            return p1.second > p2.second;
+        };        
+        sort(begin(vec), end(vec), comp);        
+        string result = "";        
+        for(int i = 0; i <= 122; i++) {
+            result += string(vec[i].second, vec[i].first);
+        }
+        return result;
+    }
+};
+//For sorting:O(mlogm), where m is the size of the vector.Here,𝑚=123 so mlogm is effectively constant.i.e. O(1)
+//Therefore total TC:O(n)+O(1)
