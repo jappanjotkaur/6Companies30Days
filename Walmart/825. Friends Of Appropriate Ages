@@ -1,0 +1,24 @@
+class Solution {//TC:O(n) SC:O(1)
+public:
+    int numFriendRequests(vector<int>& ages) {
+        vector<int> M(121, 0);  // M[i] will store the count of people of age i (range 0-120)
+        for (int a : ages) {
+            M[a]++;
+        }
+        int ANS = 0;
+        for (int a : ages) {
+            int X = 0.5 * a + 7;  // calculate their minimum valid age (X)
+            for (int i = 1; i < 121; i++) {
+                // Check the conditions for sending a friend request
+                if (i > X && i <= a && (i <= 100 || a >= 100)) {
+//i > X: The recipient’s age must be greater than the minimum valid age (X).
+//i <= a: The recipient’s age must not exceed the sender’s age (a).
+                    ANS += M[i];  // Add the frequency of valid recipients of age 'i'
+                    if(i==a) ANS--;
+                }
+            }
+        }
+        return ANS;
+    }
+};
+//recipient's age:i ; sender's age:a
