@@ -1,0 +1,49 @@
+//TC:O(n) (for ‘checkprime:O(10)‘ and processing each number:O(n) and for DP updates:O(1024*n))
+//SC:O(n) (bitmap)
+
+class Solution {
+public:
+    int primelist[10] = {2,3,5,7,11,13,17,19,23,29};//array stores first 10 primes(less than 30) bcz we only care about numbers ≤ 30 in  problem.
+    int checkprime(int n){
+        int ret = 0;// Initialize a bitmask
+        for(int i = 0 ;  i < 10 ; i++){
+            if(n%primelist[i] == 0){// If divisible by the i-th prime
+                n/=primelist[i];// Remove the prime factor
+                ret |= 1<<i; // Set the i-th bit in the mask to 1
+            }
+            if(n%primelist[i] == 0) return -1;//If divisible again, not square-free
+        }
+        return ret;//Return the bitmask representing prime factors
+    }
+    int squareFreeSubsets(vector<int>& nums) {
+        int MOD = 1e9+7, cnt = 0;//cnt keeps track of how many valid numbers we have.
+        vector<int> bitmap(nums.size());
+        for(auto &v:nums){
+            auto ret = checkprime(v);
+            if(ret != -1) {  bitmap[cnt++] = ret;//Store valid square-free numbers mask
+            }
+        }
+        int m[1024] = {0};//DP array of size 1024(2^10, as we have 10 primes)
+        int ans = 0;
+        while(cnt > 0){
+            cnt--;
+            for(int k = 0 ; k < 1024 ; k++){// Iterate through all existing subsets
+                if(m[k] != 0 && (k&bitmap[cnt]) == 0){ // No overlap in prime factors
+                    m[(k|bitmap[cnt])] = (m[(k|bitmap[cnt])] + m[k])%MOD;
+                }
+            }
+            m[bitmap[cnt]]++;// Add the single number as a subset
+        }
+        for(int i = 0 ; i < 1024 ; i++){
+            ans = (ans + m[i])%MOD;// Sum up all valid subsets
+        }
+        return ans;
+    
+    }
+};
+//DP array: m[k] stores the count of valid subsets that correspond to the bitmask k.For example, if k = 3 (binary 011), it means there are m[3] subsets whose prime factors are only 2 and 3.
+/*Bitmask Construction Rule:
+The first prime (2) is represented by the 0th bit.
+The second prime (3) is represented by the 1st bit.
+The third prime (5) is represented by the 2nd bit.
+And so on, for the list of primes: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29.*/
