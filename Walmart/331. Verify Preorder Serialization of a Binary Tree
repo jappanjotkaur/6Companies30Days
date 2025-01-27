@@ -1,0 +1,32 @@
+class Solution {//TC:O(n)   SC:O(1) for both solutions
+public:
+     bool isValidSerialization(string preorder) {
+        if(preorder.empty())return false;
+        int cnt=1,i=0;
+        while(i<preorder.size()){
+            if(preorder[i]=='#')cnt--;
+            else cnt++;
+            if(cnt==0)break;
+            while(i<preorder.size()&&preorder[i++]!=','); //There's no actual body here (no code inside the curly braces {}), bcz ; represents an empty statement. The loop just "skips" over the commas in the string.
+        }
+        return cnt==0&&i==preorder.size()-1;
+    }
+};
+
+/*class Solution {//SC:O(n)==O(1) bcz n is typically small
+public:
+    bool isValidSerialization(string preorder) {
+        if(preorder.size()==0) return false;
+        stringstream s(preorder);
+        string curr;
+        int nodes = 1;
+        while (getline(s, curr, ',')) {
+            nodes--;
+            if (nodes < 0) return false;
+            if (curr != "#") nodes += 2;
+        }
+        return nodes == 0;
+
+    }
+};
+*/
