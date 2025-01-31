@@ -1,0 +1,20 @@
+class Solution {//TC:O(klogk+llogl) i.e. sorting & SC:O(1)
+public:  // Add this line to make functions accessible outside the class
+  int getMaxGap(vector<int> bars){//finds longest consecutive sequence of removable bars
+      sort(bars.begin(), bars.end());
+      int count=2,res=2;//count:Tracks current length of consecutive nos. and res:Stores maximum consecutive sequence length found
+      for(int i = 1; i < bars.size();i++) {
+          count=(bars[i-1]+1==bars[i]) ? count + 1 : 2;//If bars[i] is exactly bars[i-1] + 1 (i.e,consecutive numbers)then increment count Else(non-consecutive number found):Reset count to 2
+          res = max(res, count);//keep track of the longest consecutive sequence found
+      }
+      return res;
+  }
+  int maximizeSquareHoleArea(int n, int m, vector<int>& hBars, vector<int>& vBars) {
+      int gap = min(getMaxGap(hBars), getMaxGap(vBars));
+      return gap * gap;
+  }
+};
+/*Why count = 2 and res = 2?
+A square hole always requires at least two bars to be removed.
+If there’s only one removable bar, you cannot form a square hole.
+Guarantees that the minimum hole size is 2 × 2, which is the smallest valid square.*/
