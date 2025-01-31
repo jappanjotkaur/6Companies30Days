@@ -1,0 +1,20 @@
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        vector<bool> dp(s.size() + 1, false);//DP array of size s.size()+1 (one extra to include empty substring)
+        dp[0] = true;//bcz an empty string can always be segmented 
+        for (int i = 1; i <= s.size(); i++) {
+            for (const string& w : wordDict) {
+                int start = i - w.length();
+                if (start>=0 && dp[start] && s.substr(start, w.length())==w) {//Word w fits within  s[0:i],substring s[0:start] is already valid & substring from start of length w.length() matches w.
+
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[s.size()];//which tells if the full string s can be segmented        
+    }
+};
+//Total Complexity:𝑂(𝑁×𝑀×𝐾) Outer loop iterates O(N) times (N = len(s)),Inner loop iterates O(M) times (M = len(wordDict)) and Substring comparison takes at most O(K) (K = max length of word in wordDict).
+//Space Complexity: O(N) as DP array dp takes O(N) space
