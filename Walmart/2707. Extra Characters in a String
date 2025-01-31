@@ -1,0 +1,95 @@
+/*//Approach(Bottom Up)
+//T.C : O(n^3) inner loop+outer loop+substr
+//S.C : O(n)
+class Solution {
+public:
+    int minExtraChar(string s, vector<string>& dict) {
+        int n = s.length();
+        unordered_set<string> st(begin(dict), end(dict));//Converts dict vector into unordered_set named st which provides faster average TC for find n count operations(O(1)) hhereas vector take O(n) time
+
+        vector<int> t(n+1, 0);//Initializes DP array t of size n+1 with all values set to 0.
+        //t[i] = min extra characters in s from index = i to n-1
+
+        for(int i = n-1; i >=0 ; i--) {//Reason for going from right to left is that we want to build up the solution using previously computed values.
+            t[i] = 1 + t[i+1]; //skipping the ith character 1 + (solve(i+1));
+
+            for(int j = i; j < n; j++) {
+                string curr = s.substr(i, j-i+1);
+                if(st.count(curr)) {
+                    t[i] = min(t[i], t[j+1]); //solve(j+1)
+                }
+            }
+        }
+
+        return t[0];//minimum no. of extra characters required to split entire string s starting from index 0 to the end.
+    }
+};*/
+
+class Solution {
+public:
+    int minExtraChar(string s, vector<string>& dictionary) {
+        int n = s.length();
+   vector<int> dp(n + 1, 0); 
+
+    vector<string> sortedDict = dictionary;//dictionary is copied into sortedDict to avoid modifying the original input.
+    sort(sortedDict.begin(), sortedDict.end(), [](const string& a, const string& b) {//sort fn to sort the dictionary in descending order of the length of the words
+        return a.length() > b.length();
+    });
+
+    for (int i = n - 1; i >= 0; --i) {
+        dp[i] = dp[i + 1];
+        for (const string& word : sortedDict) {
+            if (i + word.length() <= n && s.substr(i, word.length()) == word) {
+                dp[i] = max(dp[i], (int)word.length() + dp[i + word.length()]);
+            }
+        }
+    }
+
+    return s.length()-dp[0];//dp[0] holds max len of valid words that can be formed starting from index 0 in the string.
+        
+    }
+};
+
+
+
+
+
+
+//Top down approach (Recursion + Memo)
+//T.C : O(n^3)
+//S.C : O(total numberof characters in dictionary words + n for memoization array)
+// class Solution {
+// public:
+//     int t[51];//array for memoization
+//     int solve(int i, string& s, unordered_set<string>& st, int &n) {
+//         if(i >= n) {
+//             return 0;
+//         }
+
+//         if(t[i] != -1) {//memoization check
+//             return t[i];
+//         }
+
+//         int result = 1 + solve(i+1, s, st, n);//Initially, assume that the current character at index i is an "extra character"
+
+//         for(int j = i; j < n; j++) {
+//             string curr = s.substr(i, j-i+1);
+//             if(st.count(curr)) {
+//                 //valid substring
+//                 result = min(result, solve(j+1, s, st, n));
+//             }
+//         }
+
+//         return t[i] = result;//store result for subproblem starting at index i in the memoization array t[i].
+//     }
+
+//     int minExtraChar(string s, vector<string>& dict) {
+//         int n = s.length();
+//         memset(t, -1, sizeof(t));//initializes memoization array t with -1, which indicates that no subproblems have been solved yet.
+//         unordered_set<string> st(begin(dict), end(dict));
+
+//         return solve(0, s, st, n);
+//     }
+// };
+
+
