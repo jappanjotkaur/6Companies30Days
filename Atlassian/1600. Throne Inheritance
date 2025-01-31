@@ -1,0 +1,51 @@
+//TC & SC:O(n)
+class node{
+    public:
+    string name;// Stores the person's name
+    vector<node*> children;// Stores the person's children
+    bool alive;// Indicates if the person is alive
+    node(string n){
+        name = n; // Initialize name
+        alive = true;// Newborns are alive by default
+    }
+};
+class ThroneInheritance {
+public:
+    node* king;
+    unordered_map<string,node*> person;//Maps names to nodes
+    ThroneInheritance(string kingName) {
+        king = new node(kingName);// Create a new node for the king
+        person[kingName] = king;// Store king in the map
+    }
+    void birth(string parentName, string childName) {
+        node* parent = person[parentName];//find parent node
+        node* child = new node(childName); //create new node for child
+        person[childName] = child;// Add child to the map
+        parent->children.push_back(child); // update parent's children array
+    }    
+    void death(string name) {
+        // mark the person not alive
+        node* dead = person[name];
+        dead->alive = false;
+    }
+    vector<string> getInheritanceOrder() {
+        vector<string> order;//Stores the inheritance order
+        node* root = king; //Start with the king
+        inheritanceOrder(root,order);
+        return order;
+    }
+    void inheritanceOrder(node* root, vector<string>& order){//DFS Traversal
+        if(root->alive) // consider only if current person is alive
+            order.push_back(root->name);
+        for(auto i : root->children)//Explore children recursively
+            inheritanceOrder(i,order);
+    }
+};
+
+/**
+ * Your ThroneInheritance object will be instantiated and called as such:
+ * ThroneInheritance* obj = new ThroneInheritance(kingName);
+ * obj->birth(parentName,childName);
+ * obj->death(name);
+ * vector<string> param_3 = obj->getInheritanceOrder();
+ */
