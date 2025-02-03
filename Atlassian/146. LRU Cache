@@ -1,0 +1,79 @@
+class Node{//TC:O(1)   SC:O(capacity)
+    public:
+    int key;
+    int val;
+    Node*next;
+    Node*prev;
+    Node(int key,int val){//Constructor Node(int key, int val) is used to initialize object when an instance of Node is created.Without a constructor, u would have to manually set values every time u create a new node.
+   
+    this->key=key;//Can write like this too:Node(int k, int v){key=k; val=v;
+    this->val=val;
+    next=NULL;
+    prev=NULL;
+    }
+};
+class LRUCache {
+public:
+    unordered_map<int,Node*>m;
+    Node*head=new Node(-1,-1);
+    Node*tail=new Node(-1,-1);
+    int size;
+    LRUCache(int capacity){//constructor for initializing LRU Cache
+        size=capacity;
+        head->next=tail;//Creates empty doubly LL with head & tail connected
+        tail->prev=head;
+    }
+    void deleteNode(Node*p){
+       Node*pre=p->prev;
+       Node*nex=p->next;
+       pre->next=nex;
+       nex->prev=pre;
+    }
+    void addNode(Node*newnode){
+        Node* temp=head->next;
+        head->next=newnode;
+        newnode->prev=head;
+        newnode->next=temp;
+        temp->prev=newnode;
+    }
+    int get(int key) {
+        if(m.find(key)==m.end())
+        return -1;
+        Node*p=m[key];//Remove node p from its current position & move it to most recently used position then update hashmap to reflect its new position.
+        deleteNode(p);
+        addNode(p);
+        m[key]=head->next;
+        return head->next->val;
+    }
+    
+    void put(int key, int value) {
+       if(m.find(key)!=m.end()){
+            Node*c=m[key];
+            deleteNode(c);
+            c->val=value;
+            addNode(c);
+            m[key]=head->next;
+        }
+        else{
+            if(m.size()==size){//if cache is full then remove LRU node(last node before tail)and Delete it from the hashmap
+                Node* prev=tail->prev;
+                deleteNode(prev);
+                Node*l=new Node(key,value);
+                addNode(l);
+                m.erase(prev->key);
+                m[key]=head->next;
+            }
+            else{
+                 Node*l=new Node(key,value);
+                addNode(l);
+                m[key]=head->next; 
+            }
+        }
+    }
+};
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
