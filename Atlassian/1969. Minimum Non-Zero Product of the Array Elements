@@ -1,0 +1,51 @@
+// class Solution { //TC & SC:O(p)
+// public:
+//     long long myPow(long long base, long long exponent, long long mod) {
+//         if (exponent == 0) return 1;
+//         if (exponent == 1) return base % mod;
+        
+//         long long tmp = myPow(base, exponent/2, mod);
+        
+//         if (exponent % 2 == 0) { 
+//             return (tmp * tmp) % mod;
+//         }
+//         else { 
+//             tmp = tmp * tmp % mod;
+//             base %= mod;
+//             return (tmp * base) % mod;
+//         }
+//     }
+    
+//     int minNonZeroProduct(int p) {
+//         long long range = pow(2, p);
+//         range--;
+//         long long mod = pow(10, 9) + 7;// modulus value to 10^9+7
+//         long long tmp = myPow(range-1, range/2, mod);
+//         return (tmp * (range%mod)) % mod;
+//     }
+// };
+
+class Solution {//TC & SC:O(logp)
+public:
+    int minNonZeroProduct(int p) {
+        long long N = 1000000007; // mod value
+        long long max = (1LL << p) - 1; // max = 2^p - 1
+        long long power = pow(max - 1, (max - 1) / 2, N); // calculating power
+        power = (power % N) * (max % N) % N; // final calculation
+        return (int)power;
+    }
+
+private:
+    long long pow(long long num, long long p, long long N) {
+        if (p == 0) 
+            return 1LL; // base case
+
+        long long temp = pow(num, p / 2, N); // recursive call to calculate num^(p/2)
+        temp = temp % N; // take modulus with N
+        if (p % 2 == 0) {
+            return (temp * temp) % N; // if p is even, return temp^2 % N
+        } else {
+            return (((temp * temp) % N) * (num % N)) % N; // if p is odd, return temp^2 * num % N
+        }
+    }
+};
