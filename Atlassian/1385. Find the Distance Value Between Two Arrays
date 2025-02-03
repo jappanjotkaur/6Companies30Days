@@ -1,0 +1,20 @@
+class Solution {//TC: O(n * m)  SC: O(1)
+public:
+    int findTheDistanceValue(vector<int>& arr1, vector<int>& arr2, int d) {
+        int count = 0;  
+        for (int i = 0; i < arr1.size(); i++) {
+            bool valid = true;  // Assume the current element satisfies the distance value condition
+            for (int j = 0; j < arr2.size(); j++) {
+                if (abs(arr1[i] - arr2[j]) <= d) {
+                    valid = false;  // Found an element in arr2 that violates the condition
+                    break;          // No need to check further for this arr1[i]
+                }
+            }            
+            // If no arr2 element is within distance d, increment the count
+            if (valid) {
+                count++;
+            }
+        }        
+        return count;  // Return the total count of valid elements in arr1
+    }
+};
