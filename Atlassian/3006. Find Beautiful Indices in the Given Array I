@@ -1,0 +1,37 @@
+class Solution {//TC:O(n) because a and b are too small  SC:O(n)
+public:
+    vector<int> beautifulIndices(string s, string a, string b, int k) {
+        vector<int> c, d;//stores starting indices of a & b in s
+        int pos = 0;//start searching from the beginning of s
+
+        // Find all starting indices of substring 'a'
+        while ((pos = s.find(a, pos)) != string::npos) {
+            c.push_back(pos);
+            pos++; // Move forward to avoid infinite loop
+        }
+
+        pos = 0; // Reset pos for finding 'b'
+        // Find all starting indices of substring 'b'
+        while ((pos = s.find(b, pos)) != string::npos) {
+            d.push_back(pos);
+            pos++; // Move forward
+        }
+
+        vector<int> ans;
+        int i = 0, j = 0;
+
+        // Use two-pointer technique to find valid indices
+        while (i < c.size() && j < d.size()) {
+            if (abs(c[i] - d[j]) <= k) {
+                ans.push_back(c[i]); 
+                i++; // Move to next index in c
+            } else if (c[i] < d[j]) {
+                i++;
+            } else {
+                j++;
+            }
+        }
+        
+        return ans;
+    }
+};
