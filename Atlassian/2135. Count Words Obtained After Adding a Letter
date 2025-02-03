@@ -1,0 +1,38 @@
+class Solution {
+public:
+    int wordCount(vector<string>& startWords, vector<string>& targetWords) {
+    unordered_set<string> wordSet;
+    // Sort startWords and insert them into a hash set
+    for (auto& word : startWords) {
+        sort(word.begin(), word.end());
+        wordSet.insert(word); // Only unique sorted words from startWords will be stored Since unordered_set doesn't allow duplicates
+        }
+
+    int res = 0;
+    for (auto& word : targetWords) {
+        if (word.size() <= 1) continue;  // Skip if target word is too short (less than 2 chars)
+        // Sort the target word
+        string sortedWord = word;
+        sort(sortedWord.begin(), sortedWord.end());
+        // Generate substrings by removing one character at a time
+        for (int i = 0; i < word.size(); i++) {
+            string temp = sortedWord.substr(0, i) + sortedWord.substr(i + 1); // Remove one character
+            if (wordSet.count(temp)) {  // Check if the substring is in the startWords set
+            res++;
+            break;  // No need to check further for this word, as it's already matched
+            }
+        }
+    }
+
+    return res;
+    }
+};//better karne ke liye bitmasking use krni pdegi
+/*Time Complexity:𝑂(𝑛⋅𝑚⋅log⁡(𝑚)+𝑡⋅(𝑚⋅log⁡(𝑚)+𝑚))
+Sorting and inserting startWords: 𝑂(𝑛⋅𝑚⋅log⁡(𝑚))
+Processing targetWords: 𝑂(𝑡⋅(𝑚⋅log⁡(𝑚)+𝑚))where:
+n = number of words in startWords
+t = number of words in targetWords
+m = maximum length of a word
+Space Complexity:unordered_set for startWords:O(n⋅m) where:
+n = number of words in startWords
+m = maximum length of a word*/
