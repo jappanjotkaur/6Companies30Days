@@ -1,0 +1,24 @@
+class Solution {//TC: O(n log n) SC: O(n)
+public:
+    vector<string> findHighAccessEmployees(vector<vector<string>>& access_times) {//access_times[i][0] →Employee name(string); access_times[i][1]→Time of access(string representation of an integer)   
+        int n = access_times.size();
+        sort(access_times.begin() , access_times.end());
+        vector<string>ans;//stores list of employees who meet the criteria
+        unordered_map<string,int>mp;//keeps track of employees already added to avoid duplicates
+        for(int i = 0; i < n - 2; i++){
+            if(mp.find(access_times[i][0]) == mp.end() &&
+             access_times[i][0] == access_times[i + 2][0]){
+                // calculate time for access_times[i][1]
+                int t1 = stoi(access_times[i][1]);//Converts string timestamps at i and i+2 to integers 
+                // calculate time for access_times[i + 2][1]
+                int t2 = stoi(access_times[i + 2][1]);
+                if(t2 - t1 < 100){
+                  i++;
+                  ans.push_back(access_times[i][0]);
+                  mp[access_times[i][0]]++;
+                } 
+            }
+        }
+       return ans;
+    }
+};
