@@ -1,0 +1,29 @@
+class DataStream {//TC & SC:O(1)
+public:
+    int count=0;//total element in datastream
+    int last=0;//Counts consecutive occurrences of the given value
+    int tempk,tempval;
+    DataStream(int value, int k) {//Once the constructor finishes execution,value and k are lost(they only exist inside the constructor's scope).We need to store them in member variables (tempval and tempk) so they remain available throughout the object's lifetime.
+        tempval=value;
+        tempk=k;
+    }    
+    bool consec(int num) {
+        count++;
+        if(num==tempval){
+            last++;
+        }   
+        else {last=0;}
+        if(count<tempk){ 
+            return false;
+        }
+        else if(last>=tempk){
+            return true;
+        }
+        return false;
+    }
+};
+/**
+ * Your DataStream object will be instantiated and called as such:
+ * DataStream* obj = new DataStream(value, k);
+ * bool param_1 = obj->consec(num);
+ */
