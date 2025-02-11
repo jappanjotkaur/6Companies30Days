@@ -1,0 +1,13 @@
+class Solution {//TC:O(nlogn)  SC:O(1)
+public:
+    bool asteroidsDestroyed(int mass, vector<int>& asteroids) {
+        sort(asteroids.begin(), asteroids.end()); 
+        long long planetMass = mass; // Use long long to avoid overflow
+        for(int i=0;i<asteroids.size();i++){
+            if(planetMass>=asteroids[i])
+            planetMass+=asteroids[i];
+            else return false;            
+        }
+        return true;
+    }
+};
