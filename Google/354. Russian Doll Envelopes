@@ -1,0 +1,41 @@
+class Solution {
+public:
+    // Custom comparison function for sorting envelopes based on width and height
+    static bool cmp(vector<int> &a, vector<int> &b) {
+        // If the widths are equal, sort in descending order of heights
+        if (a[0] == b[0]){
+            return a[1] > b[1];
+        }
+        // Sort in ascending order of widths
+        return a[0] < b[0];
+    }
+    int maxEnvelopes(vector<vector<int>> &envelopes){
+        // Get the number of envelopes
+        int n = envelopes.size();
+        // Sort the envelopes based on width and height using the custom comparison function
+        sort(envelopes.begin(), envelopes.end(), cmp);
+        // Create a temporary vector to store the heights of envelopes
+        vector<int> temp;
+        // Iterate through the sorted envelopes
+        for (int i = 0; i < n; i++){
+            // Get the height of the current envelope
+            int val = envelopes[i][1];
+            // Find the index where the height can be inserted or replaced in 
+            //the temporary vector
+            int index = lower_bound(temp.begin(), temp.end(), val) - temp.begin(); // - temp.begin() is essential because it converts the result of lower_bound from an iterator to an index.
+            // If the index is beyond the current size of the temporary vector
+            //, append the height
+            if (index >= temp.size()){
+                temp.push_back(val);
+            }
+            else {
+                // Replace the height at the determined index
+                temp[index] = val;
+            }
+        }        
+        // Return the size of the temporary vector, which represents 
+        //the maximum number of envelopes that can be nested
+        return temp.size();
+    }
+};
+//TC:O(nlogn), SC:O(n) 
