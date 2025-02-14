@@ -1,0 +1,32 @@
+class Solution {//TC & SC:O(n)
+    int n;
+    vector<int> solve(string s){//This fn computes Z-fn values for string.
+        vector<int> vec(n);//Stores Z-values for each index
+        int i=0,j=0;//left and right bounds of current Z-box
+        vec[0]=n;//entire string is prefix of itself
+        for(int k=1;k<n;++k){
+            if(k<=j){//Inside the Current Z-box
+                vec[k]=min(j-k+1,vec[k-i]);// Take the minimum of remaining length (j-k+1) and the value of vec[k-i], which is a previously computed Z-value that can be reused.
+            }
+            while(k+vec[k]<n && s[vec[k]]==s[k+vec[k]]){//Extend the Z-value by checking character matches between:
+//s[vec[k]]: Next character in the prefix.
+//s[k + vec[k]]: Corresponding character in the substring starting from k.
+                vec[k]++;
+            }
+            if(k+vec[k]-1>j){//If the Z-box is extended beyond j, updates i and j to the new bounds of the Z-box.
+                i=k;
+                j=k+vec[k]-1;
+            }
+        }
+        return vec;
+    }
+public:
+    long long sumScores(string s) {
+        n=s.size();
+        vector<int> v=solve(s);
+        long long ans=0;
+        for(int i=0;i<n;++i){ans+=v[i];}
+        return ans;
+    }
+};
+//Z algo used. Z[i]:If Z[i]=3 means 3 characters starting at i(next 3 characters). They match with from the beginning of 3 characters.
