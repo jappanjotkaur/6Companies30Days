@@ -1,0 +1,43 @@
+class WordDictionary {
+public:
+    struct Trie{
+        Trie* child[26];
+        bool isEnd = false;
+    };    
+    Trie *root;
+    WordDictionary() {
+        root = new Trie();
+    }    
+    void addWord(string word) {
+        Trie *cur = root;//Start from root
+        for(auto &ch : word){
+            int pos = ch-'a';// Convert character to index
+            if(cur->child[pos]==NULL) cur->child[pos]=new Trie();//Create new node if missing
+            cur=cur->child[pos]; // Move to the next node
+        }
+        cur->isEnd=true;// Mark end of word
+    }    
+    bool search(string word) {
+        Trie *cur = root;
+        return find(word,0,cur);
+    }    
+    bool find(string &word, int idx, Trie* cur){
+        if(idx == word.size()) return cur->isEnd;		
+        if(word[idx]=='.'){//If wildcard is encountered
+            for(int i=0; i<26; ++i){//Try all children (a-z)
+                if(cur->child[i] && find(word, idx+1, cur->child[i])) return true;
+            }
+        }else{// Normal character case
+            int i = word[idx]-'a';// Convert to index
+            if(cur->child[i] && find(word, idx+1, cur->child[i])) return true;
+        }
+        return false;
+    }
+};
+/*TC:addWord:O(N⋅M) for N words and M average length of the words.
+search:
+Without wildcards:O(S⋅M) for S searches.
+With wildcards:O(S⋅26^M ) in the worst case for S searches.
+
+SC:O(N⋅M) for storing the Trie.
+O(M) additional space for the recursion stack during wildcard searches.*/
