@@ -1,0 +1,77 @@
+class Solution {//TC:O(N * d^2) where d is depth of tree. sq coz comparing all pairs from leftv and rightv  ; SC:O(d)
+public:
+    int numOfGoodLeafPairs=0;
+    vector<int> dfs(TreeNode* node, int& dis) {
+        if(node==nullptr) {
+            return {};
+        }
+        if(node->left == NULL && node->right == NULL) {
+            return {1};
+        }
+        vector<int> leftv=dfs(node->left, dis);
+        vector<int> rightv=dfs(node->right, dis);
+        for(auto lv: leftv) {
+            for(auto rv : rightv) {
+                if(lv+rv <= dis) {
+                    numOfGoodLeafPairs++;
+                }
+            }
+        }
+        vector<int>parentv;
+        for(auto lv : leftv) {
+            if(lv + 1 <= dis) {
+                parentv.push_back(lv+1);
+            }
+        }
+        for(auto rv : rightv) {
+            if(rv + 1 <= dis) {
+                parentv.push_back(rv+1);
+            }
+        }
+        return parentv;
+    }
+    int countPairs(TreeNode* root, int dis) {
+        dfs(root,dis);
+        return numOfGoodLeafPairs;
+    }
+};
+// class Solution{//Complexity less than previous but more time and space complexity coz of unordered map
+//TC:less than O(N * d^2) ; SC:O(d)
+//     public:
+//     int numOfGoodLeafPairs;
+//     unordered_map<int,int> dfs(TreeNode* node,int& dis){
+//     if(node==nullptr) {
+//             return {};
+//     }
+//     unordered_map<int,int> mp; 
+//     mp[1]=1;
+//     if(node->left == NULL && node->right == NULL) {
+//         return mp;
+//     }
+//         unordered_map<int,int>leftv=dfs(node->left, dis);
+//         unordered_map<int,int>rightv=dfs(node->right, dis);
+//         for(auto [lv,lf]: leftv) {
+//             for(auto [rv,rf] : rightv) {
+//                 if(lv+rv <= dis) {
+//                     numOfGoodLeafPairs+=(lf*rf);
+//                 }
+//             }
+//         }
+//         unordered_map<int,int>parentv;
+//         for(auto [lv,lf] : leftv) {
+//             if(lv + 1 <= dis) {
+//                 parentv[lv+1]+=lf;
+//             }
+//         }
+//         for(auto [rv,rf]: rightv) {
+//             if(rv + 1 <= dis) {
+//                 parentv[rv+1]+=rf;
+//             }
+//         }
+//         return parentv;
+//     }
+//     int countPairs(TreeNode* root, int dis) {
+//         dfs(root,dis);
+//         return numOfGoodLeafPairs;
+//     }
+// };
